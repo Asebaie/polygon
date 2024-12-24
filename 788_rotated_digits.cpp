@@ -28,25 +28,41 @@ Output: 1
 class Solution {
 public:
     int rotatedDigits(int n) {
+        unordered_set<int> normDigits = {0, 1, 8};
+        unordered_set<int> swapDigits = {2, 5, 6, 9};
+
+        vector<int> state(n + 1, 0);
         int count = 0;
 
-        for (int i = 1; i <= n; ++i) {
-            int num = i;
-            bool hasGood = false;
+        for (int i = 0; i <= n; ++i) {
+            if (i < 10) {
+                if (normDigits.count(i)) {
+                    state[i] = 1;
+                }
 
-            while (num > 0) {
-                int digit = num % 10;
-                if (digit == 3 || digit == 4 || digit == 7) {
-                    hasGood = false;
-                    break;
+                else if (swapDigits.count(i)) {
+                    state[i] = 2;
+                    ++count;
                 }
-                if (digit == 2 || digit == 5 || digit == 6 || digit == 9) {
-                    hasGood = true;
-                }
-                num /= 10;
             }
+            
+            else {
+                int a = state[i / 10];
+                int b = state[i % 10];
 
-            count += hasGood;
+                if (a == 0 || b == 0) {
+                    state[i] = 0;
+                }
+                
+                else if (a == 2 || b == 2) {
+                    state[i] = 2;
+                    ++count;
+                }
+                
+                else {
+                    state[i] = 1;
+                }
+            }
         }
 
         return count;
