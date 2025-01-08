@@ -247,37 +247,30 @@ double AStar(const Graph& graph, int start, int goal, const Coordinates& coordin
     return -1;
 }
 
-void runTest(const string& filename, double startLon, double startLat, double goalLon, double goalLat) {
+void runTest(const string& filename, double lon1, double lat1, double lon2, double lat2) {
     Graph graph;
     Coordinates coordinates;
-    parseGraph(filename, graph, coordinates);
+    parseGraph("/Users/mir/CLionProjects/lab-8/spb_graph.txt", graph, coordinates);
 
-    int start = findNearestNode(coordinates, startLon, startLat);
-    int goal = findNearestNode(coordinates, goalLon, goalLat);
+    int start = findNearestNode(coordinates, lon1, lat1);
+    int goal = findNearestNode(coordinates, lon2, lat2);
 
-    if (start == -1 || goal == -1) {
-        cerr << "Error: Start or goal node not found by coordinates." << endl;
-        return;
-    }
+    cout << "\nRunning DFS from (" << lon1 << ", " << lat1 << ") to (" << lon2 << ", " << lat2 << ")\n";
+    assert(DFS(graph, start, goal) >= 0);
 
-    cout << "\nRunning DFS:\n";
-    DFS(graph, start, goal);
+    cout << "\nRunning BFS from (" << lon1 << ", " << lat1 << ") to (" << lon2 << ", " << lat2 << ")\n";
+    assert(BFS(graph, start, goal) >= 0);
 
-    cout << "\nRunning BFS:\n";
-    BFS(graph, start, goal);
+    cout << "\nRunning Dijkstra from (" << lon1 << ", " << lat1 << ") to (" << lon2 << ", " << lat2 << ")\n";
+    assert(Dijkstra(graph, start, goal) >= 0);
 
-    cout << "\nRunning Dijkstra:\n";
-    Dijkstra(graph, start, goal);
-
-    cout << "\nRunning A*:\n";
-    AStar(graph, start, goal, coordinates);
+    cout << "\nRunning A* from (" << lon1 << ", " << lat1 << ") to (" << lon2 << ", " << lat2 << ")\n";
+    assert(AStar(graph, start, goal, coordinates) >= 0);
 }
 
 int main() {
     cout << "All tests passed.\n";
-
-    string filename = "/Users/mir/CLionProjects/lab-8/spb_graph.txt";
-    runTest(filename, 30.500014, 59.936521, 30.310011, 59.956363);
+    runTest("/Users/mir/CLionProjects/lab-8/test_graph.txt", 30.500014, 59.936521, 30.310011, 59.956363);
 
     return 0;
 }
